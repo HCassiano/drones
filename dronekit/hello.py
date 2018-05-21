@@ -13,6 +13,8 @@ import Constants
 
 vehicle = my_connect(connection_string)
 
+#TODO: better failsafe conditions
+#TODO: check initial heartbeat timeout
 isDroneOnAir = False
 while True: #command loop
 	try:
@@ -38,14 +40,13 @@ while True: #command loop
 	elif (user_input == 2):
 		GotoMeters.my_goto(vehicle)	
 	elif (user_input == 3):
-		LandingTakeoff.takeoff(vehicle)
+		LandingTakeoff.landing(vehicle)
 		isDroneOnAir = False
 	elif (user_input == 4):
 		print("exiting...")
 		break
 	else:
 		print("That's not a valid command!")		
-
 # Close vehicle object before exiting script
 vehicle.close()
 print("Completed")

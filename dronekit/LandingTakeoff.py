@@ -24,8 +24,17 @@ def takeoff(vehicle):
 	while True:
 	    print " Altitude: ", vehicle.location.global_relative_frame.alt
 	    #Break and return from function just below target altitude.
-	    if vehicle.location.global_relative_frame.alt>=aTargetAltitude*0.95:
+	    if vehicle.location.global_relative_frame.alt>=aTargetAltitude*(1 - Constants.MAX_DIFFERENCE_ALTITUDE):
 		print "Reached target altitude"
-		print "absolute altitude: %s" % vehicle.location.global_relative_frame.alt
+		print "current altitude: %s" % vehicle.location.global_relative_frame.alt
 		break
 	    time.sleep(1)
+
+def landing(vehicle):
+	print "initiating landing"
+	vehicle.mode = VehicleMode("LAND")
+	print " Altitude: ", vehicle.location.global_relative_frame.alt
+	while vehicle.location.global_relative_frame.alt > Constants.MAX_DIFFERENCE_ALTITUDE:
+		print " Altitude: ", vehicle.location.global_relative_frame.alt
+		time.sleep(1)
+	print "landing complete"	

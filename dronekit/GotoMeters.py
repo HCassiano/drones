@@ -11,13 +11,13 @@ import Constants
 def calculate_distance_in_m(fi_initial, fi_final, lambda_initial, lambda_final):
 	delta_lambda = 	lambda_final - lambda_initial
 	delta_fi = fi_final - fi_initial
-	x = delta_fi * ARC
-	y = delta_lambda * ARC * math.cos(fi_final) 	
+	x = delta_fi * Constants.ARC
+	y = delta_lambda * Constants.ARC * math.cos(fi_final) 	
 	return (x,y)
 
 def calculate_degrees_with_distance(fi_initial, lambda_initial, x, y):
-	fi_final = (y/ARC) + fi_initial
-	lambda_final = (x/(ARC*math.cos(fi_final))) + lambda_initial
+	fi_final = (y/Constants.ARC) + fi_initial
+	lambda_final = (x/(Constants.ARC*math.cos(fi_final))) + lambda_initial
 	return (fi_final,lambda_final)
 	 
 def my_goto(vehicle):
