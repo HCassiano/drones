@@ -5,7 +5,8 @@ import time
 import sys
 import math
 from MyConnect import arm_drone
-from dronekit import VehicleMode, LocationGlobalRelative
+from dronekit import VehicleMode, LocationGlobalRelative, Command
+from pymavlink import mavutil
 import Constants
 
 def calculate_distance_in_m(fi_initial, fi_final, lambda_initial, lambda_final):
@@ -76,3 +77,32 @@ def my_goto(vehicle):
 		if (math.fabs(delta_lon) < Constants.MAX_DIFFERENCE_DEGREES and math.fabs(delta_lat) < Constants.MAX_DIFFERENCE_DEGREES and math.fabs(delta_alt) < Constants.MAX_DIFFERENCE_ALTITUDE):
 			print "destination reached"
 			break
+
+def add_goto_mission (vehicle):
+	 	#set movement in north and east
+	while True:
+		try:
+			x_input = raw_input("type a distance in north[m]: ")
+	   		x_objective = float(x_input)
+			y_input = raw_input("type a distance in east[m]: ")
+			y_objective = float(y_input)
+			z_input = raw_input("type a altitude in z[m]: ")
+			z_objective = float(z_input)	
+			break
+		except NameError,ValueError:
+	   		print("That's not a number!")
+	
+	cmds = vehicle.commands
+	#calculate input in degrees for use in local functions (LocationGlobal)
+	degrees = calculate_degrees_with_distance(vehicle.location.global_relative_frame.lon, vehicle.location.global_relative_frame.lat, x_objective, y_objective)
+
+	#calculate target (lon,lat)
+	target_lon = degrees[0]
+	target_lat = degrees[1]
+
+	# Set the LocationGlobal to head towards
+	print "Actual Global Location (Relative): %s" % vehicle.location.global_relative_frame
+	print "target Position: lon = %f and lat = %f " % (target_lon, target_lat)
+
+	#setting parameters and mount mission statement
+	cmds.add(Command( 0, 0, 0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0, target_lat,target_lon,z_objective))	
